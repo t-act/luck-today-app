@@ -12,35 +12,63 @@ import {
 } from "@/components/ui/popover"
 
 type DatePickerProps = {
-  value?: string 
-  onChange?: (v: string) => void
+  value?: Date | undefined
+  onChange?: (date?: Date) => void
 }
 
-export function DatePicker({ value = "", onChange }: DatePickerProps) {
+export function DatePicker({ value, onChange}: DatePickerProps) {
   const [open, setOpen] = React.useState(false)
-  const [date, setDate] = React.useState<Date | undefined>(undefined)
+  const [internalDate, setInternalDate] = React.useState<Date | undefined>(
+    undefined
+  )
+  const selected = value !== undefined ? value : internalDate
+
+  function handleSelect(date?: Date) {
+    if (value === undefined) {
+      setInternalDate(date)
+    }
+    onChange?.(date)
+    setOpen(false)
+  }
+
+  function handleClear(e: React.MouseEvent) {
+    e.stopPropagation()
+    handleSelect(undefined)
+  }
 
   return (
-    <div className="flex flex-col gap-3">
+    <div className="flex gap-3">
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button
             variant="outline"
             id="date"
             className="w-48 justify-between font-normal"
+            title={selected ? selected.toISOString() : "No date selected"}
           >
-            {date ? date.toLocaleDateString() : "Select date"}
+            <span>
+              {selected ? selected.toLocaleDateString() : "Select date"}
+            </span>
+            {selected ? (
+              <button
+                type="button"
+                onClick={handleClear}
+                className="mr-2 rounded px-1 text-sm text-muted-foreground hover:bg-muted/50 w-auto"
+                aria-label="Clear date"
+              >
+                clear
+              </button>
+            ) : null }
             <ChevronDownIcon />
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-auto overflow-hidden p-0" align="start">
+        <PopoverContent className="w-auto overflow-hidden p-0 flex" align="start">
           <Calendar
             mode="single"
-            selected={date}
+            selected={selected}
             captionLayout="dropdown"
             onSelect={(date) => {
-              setDate(date)
-              setOpen(false)
+              handleSelect(date)
             }}
           />
         </PopoverContent>
