@@ -31,11 +31,6 @@ export function DatePicker({ value, onChange}: DatePickerProps) {
     setOpen(false)
   }
 
-  function handleClear(e: React.MouseEvent) {
-    e.stopPropagation()
-    handleSelect(undefined)
-  }
-
   return (
     <div className="flex gap-3">
       <Popover open={open} onOpenChange={setOpen}>
@@ -49,20 +44,10 @@ export function DatePicker({ value, onChange}: DatePickerProps) {
             <span>
               {selected ? selected.toLocaleDateString() : "Select date"}
             </span>
-            {selected ? (
-              <button
-                type="button"
-                onClick={handleClear}
-                className="mr-2 rounded px-1 text-sm text-muted-foreground hover:bg-muted/50 w-auto"
-                aria-label="Clear date"
-              >
-                clear
-              </button>
-            ) : null }
             <ChevronDownIcon />
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-auto overflow-hidden p-0 flex" align="start">
+        <PopoverContent className="w-full overflow-hidden" align="start">
           <Calendar
             mode="single"
             selected={selected}
