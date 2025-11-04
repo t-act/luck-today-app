@@ -1,18 +1,18 @@
 import { useState } from "react"
-import { Card, CardHeader, CardContent, CardFooter, Calendar } from "@/components/ui/card"
+import { 
+  Card, 
+  CardHeader, 
+  CardContent, 
+  CardFooter 
+} from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
-import { Calendar } from "@/components/ui/calendar"
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover"
+import {DatePicker} from "@/components/date-picker"
 
 function App() {
   const [name, setName] = useState("")
-  const [birthday, setBirthday] = useState("")
   const [fortune, setFortune] = useState<string | null>(null)
+  const [birthdayDate, setBirthdayDate] = useState<Date | undefined>(undefined)
 
   const fortunes = [
     "大吉 🎉 今日は最高の一日になりそう！",
@@ -22,7 +22,7 @@ function App() {
   ]
 
   const handleFortune = () => {
-    if (!name && !birthday) {
+    if (!name && !birthdayDate) {
       setFortune("名前と誕生日を入力してください")
       return
     }
@@ -30,7 +30,7 @@ function App() {
       setFortune("名前を入力してください")
       return
     }
-    else if (!birthday) {
+    else if (!birthdayDate) {
       setFortune("誕生日を入力してください")
       return
     }
@@ -51,10 +51,9 @@ function App() {
               value={name}
               onChange={(e) => setName(e.target.value)}
             />
-            <Input
-              placeholder="誕生日を入力"
-              value={birthday}
-              onChange={(e) => setBirthday(e.target.value)}
+            <DatePicker
+              value={birthdayDate}
+              onChange={(d) => setBirthdayDate(d)}
             />
             {fortune && (
               <p className="mt-4 text-center text-lg font-medium text-gray-800 bg-white/60 p-4 rounded-lg">
@@ -63,7 +62,7 @@ function App() {
             )}
           </CardContent>
           <CardFooter className="mt-auto">
-            <Button className="w-full" onClick={handleFortune}>
+            <Button className="w-full text-black" onClick={handleFortune}>
               OK
             </Button>
           </CardFooter>
